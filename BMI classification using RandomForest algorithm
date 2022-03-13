@@ -1,0 +1,47 @@
+import pandas as pd
+import numpy as np
+from sklearn.preprocessing import StandardScaler
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import accuracy_score
+from  sklearn.metrics import classification_report
+from sklearn.metrics import confusion_matrix
+
+import pickle
+
+#load the dataset
+df = pd.read_csv("bmi.csv")
+
+print(df.head())
+
+#select independent and dependent variable
+X = df[["Gender", "Height", "Weight"]]
+y = df[["Index"]]
+
+#split the dataset into train and test
+X_train, X_test, y_train, y_test = train_test_split(X,y, test_size=0.30, random_state=30)
+
+#Feature scaling
+sc = StandardScaler()
+X_train = sc.fit_transform(X_train)
+X_test = sc.transform(X_test)
+
+#model creation
+Classifier = (RandomForestClassifier())
+
+
+#fit the model
+Classifier.fit(X_train, y_train)
+
+
+#predict
+y_pred = Classifier.predict(X_test)
+
+
+#score and classification report
+print(accuracy_score(y_test, y_pred))
+print(classification_report(y_test, y_pred))
+print(confusion_matrix(y_test,y_pred))
+
+#make the pickle file
+pickle.dump(Classifier, open("model.pkl", "wb", ) )
